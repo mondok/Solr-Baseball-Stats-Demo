@@ -1,0 +1,27 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" %>
+<%@ Import Namespace="SolrCodeCamp.BaseballWeb.Models" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Baseball Web</title>
+    <link href="<%= Html.ResolveUrl("~/Content/Site.css") %>" rel="stylesheet" type="text/css" />
+    <script src="<%= Html.ResolveUrl("~/Scripts/jquery-1.4.2.min.js") %>" type="text/javascript" language="javascript" ></script>
+    <script src="<%= Html.ResolveUrl("~/Scripts/jquery.selectboxes.pack.js") %>" type="text/javascript" language="javascript" ></script>
+    <script src="<%= Html.ResolveUrl("~/Scripts/json2.js") %>" type="text/javascript" language="javascript" ></script>
+    <script src="<%= Html.ResolveUrl("~/Scripts/solrcodecamp-main.js") %>" type="text/javascript" language="javascript" ></script>
+
+    <asp:ContentPlaceHolder ID="Head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+</body>
+</html>

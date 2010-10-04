@@ -1,0 +1,13 @@
+obj
+bin
+*.5.0.ReSharper.user
+_ReSharper.*
+*.csproj.user
+*.resharper.user
+*.resharper
+*.suo
+*.cache
+*~
+*.swp
+/Build
+NDependOut
