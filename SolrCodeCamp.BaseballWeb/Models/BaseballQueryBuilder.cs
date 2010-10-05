@@ -50,7 +50,7 @@ namespace SolrCodeCamp.BaseballWeb.Models
 
                 foreach(var group in facetGroups)
                 {
-                    var queries = this.AppliedFacets.Where(fg => fg.Item1 == group).Select(q => new SolrQueryByField(q.Item1, q.Item2)).ToList();
+                    List<ISolrQuery> queries = this.AppliedFacets.Where(fg => fg.Item1 == group).Select(q => new SolrQueryByField(q.Item1, q.Item2) as ISolrQuery).ToList();
                     SolrMultipleCriteriaQuery smcq =
                         new SolrMultipleCriteriaQuery(queries,"OR");
                     fieldQueries.Add(smcq);

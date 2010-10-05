@@ -1,3 +1,7 @@
+body
+{
+    background-color:#CCFFCC;
+}
 .facet_box
 {
 	width: 150px;
@@ -5,4 +9,24 @@
 .facet_title
 {
 	font-weight:bold;
+}
+
+.number
+{
+	text-align:right;	
+}
+
+#query_results
+{
+    background-color:#FFF;
+}
+
+#query_results td
+{
+ padding:10px;   
+}
+
+#query_results tfoot
+{
+	font-weight:bold;	
 }

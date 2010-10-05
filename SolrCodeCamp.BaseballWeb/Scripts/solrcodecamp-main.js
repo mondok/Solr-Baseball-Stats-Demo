@@ -5,11 +5,9 @@ var sortDir = 'A';
 $(function () {
     $('.facet_box').live('click', updatePage);
     $('.result_sort').live('click', function (e) { setSort($(this)); });
+    currentSort = $('.current_sort_header').attr('id').replace('id_', '');
+
 });
-
-function selectFacetBox(arg){
-
-}
 
 function setSort(arg) {
     var id = arg.attr('id').replace('id_', '');
@@ -29,6 +27,7 @@ function setSort(arg) {
 }
 
 function updatePage() {
+    $.blockUI({ css: { backgroundColor: '#f00', color: '#fff'} });
     var values = $('.facet_box').selectedValues();
 
     $.ajax({
@@ -42,5 +41,6 @@ function updatePage() {
 
 function success(data) {
     $('#query_results').html(data);
+    $.unblockUI();
 }
 

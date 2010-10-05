@@ -16,7 +16,7 @@
                 <%= Html.TableHeaderLink(this.Model, "bg_visitingTeamScore", "Visitor Score")%>
             </th>
             <th>
-                <%= Html.TableHeaderLink(this.Model, "bg_dateRaw", "Date")%>
+                <%= Html.TableHeaderLink(this.Model, "bg_date", "Date")%>
             </th>
             <th>
                 <%= Html.TableHeaderLink(this.Model, "bg_dayOrNight", "Day/Night")%>
@@ -39,10 +39,10 @@
             <td>
                 <%: result.VisitingTeam %>
             </td>
-            <td>
+            <td class="number">
                 <%: result.HomeTeamScore %>
             </td>
-            <td>
+            <td class="number">
                 <%: result.VisitingTeamScore %>
             </td>
             <td>
@@ -67,10 +67,10 @@
             </td>
             <td>
             </td>
-            <td>
+            <td class="number">
                 <%: Model.GameResults.Sum(t => t.HomeTeamScore) %>
             </td>
-            <td>
+            <td class="number">
                 <%: Model.GameResults.Sum(t => t.VisitingTeamScore) %>
             </td>
             <td>
