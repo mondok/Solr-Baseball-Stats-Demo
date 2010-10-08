@@ -30,9 +30,11 @@ namespace SolrCodeCamp.BaseballWeb.Models
 
         public List<BaseballGame> GameResults { get; set; }
 
+        public int TotalRecordsFound { get; set; }
+
         private ISolrQueryResults<BaseballGame> _queryResult;
 
-        private BaseballQueryBuilder _queryBuilder;
+        private readonly BaseballQueryBuilder _queryBuilder;
 
         public BaseballView(BaseballQueryBuilder queryBuilder)
         {
@@ -44,18 +46,25 @@ namespace SolrCodeCamp.BaseballWeb.Models
         {
             _queryResult = _queryBuilder.ExecuteQuery();
 
+            this.TotalRecordsFound = _queryResult.NumFound;
+
             // add facets
-            foreach (var f in _queryResult.FacetFields)
+            // here we loop through all of our known facets and pull out what had results
+            // this allows us to keep the facets in the order we want
+            foreach (var facet in Global.BaseballGameFacetNames.OrderBy(d => d.Item3))
             {
-                string key = f.Key;
-                List<Tuple<string, int>> facetValues = new List<Tuple<string, int>>();
-
-                foreach (var v in f.Value)
+                string key = facet.Item2;
+                if (_queryResult.FacetFields.ContainsKey(key))
                 {
-                    facetValues.Add(new Tuple<string, int>(v.Key, v.Value));
-                }
+                    List<Tuple<string, int>> facetValues = new List<Tuple<string, int>>();
 
-                this.Facets.Add(key, facetValues);
+                    foreach (var v in _queryResult.FacetFields[key])
+                    {
+                        facetValues.Add(new Tuple<string, int>(v.Key, v.Value));
+                    }
+
+                    this.Facets.Add(key, facetValues);
+                }
             }
 
             // set results

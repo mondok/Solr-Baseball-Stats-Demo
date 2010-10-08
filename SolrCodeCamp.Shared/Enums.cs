@@ -9,4 +9,10 @@ namespace SolrCodeCamp.Shared
     {
         BaseballGame
     }
+
+    public enum WinningLocation
+    {
+        Home = 0,
+        Visitor = 1
+    }
 }

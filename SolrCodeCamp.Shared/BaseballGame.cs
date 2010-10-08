@@ -24,7 +24,7 @@ namespace SolrCodeCamp.Shared
 
         // 3
         [SolrField("bg_dayOfTheWeek")]
-        public string DayOfTheWeek { get; set;}
+        public string DayOfTheWeek { get; set; }
 
         // 1
         [SolrField("bg_dateRaw")]
@@ -55,5 +55,8 @@ namespace SolrCodeCamp.Shared
         // 78
         [SolrField("bg_homePlateUmpire")]
         public string HomePlateUmpireName { get; set; }
+
+        [SolrField("bg_winningLocation")]
+        public WinningLocation Winner { get; set; }
     }
 }

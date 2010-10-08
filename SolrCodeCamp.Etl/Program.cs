@@ -24,7 +24,7 @@ namespace SolrCodeCamp.Etl
         {
             Startup.Init<BaseballGame>(Global.SOLR_LOCATION);
             _solr = ServiceLocator.Current.GetInstance<ISolrOperations<BaseballGame>>();
-            LoadGames();
+            LoadGamesIntoIndex();
             RunExamples();
         }
 
@@ -39,13 +39,29 @@ namespace SolrCodeCamp.Etl
             examples.RunTextSearchExample("Halladay");
         }
 
-        static void LoadGames()
+        static void LoadGamesIntoIndex()
         {
             GameLoader loader = new GameLoader();
             var games = loader.GetGames();
             _solr.Delete(SolrQuery.All);
-            _solr.Add(games);
-           _solr.Commit();
+
+            int offset = 0;
+            int numToTake = 1000;
+            while(true)
+            {
+                var gameList = games.Skip(offset).Take(numToTake);
+                offset += numToTake;
+                if (gameList.Any())
+                {
+                    _solr.Add(gameList);
+                    _solr.Commit();
+                }
+                else
+                {
+                    break;
+                }
+            }
+            _solr.Commit();
             _solr.Optimize();
         }
     }

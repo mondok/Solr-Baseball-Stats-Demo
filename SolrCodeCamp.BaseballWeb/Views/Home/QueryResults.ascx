@@ -1,5 +1,13 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<SolrCodeCamp.BaseballWeb.Models.BaseballView>" %>
 <%@ Import Namespace="SolrCodeCamp.BaseballWeb.Models" %>
+<div class="records_found">
+    Showing
+    <%: this.Model.GameResults.Count  %>
+    of
+    <%: this.Model.TotalRecordsFound %>
+    records
+</div>
+<div class="clear">&nbsp;</div>
 <table>
     <thead>
         <tr>
@@ -42,10 +50,10 @@
             <td>
                 <%: result.VisitingTeam %>
             </td>
-            <td>
+            <td class="number_cell">
                 <%: result.HomeTeamScore %>
             </td>
-            <td>
+            <td class="number_cell">
                 <%: result.VisitingTeamScore %>
             </td>
             <td>
@@ -73,10 +81,10 @@
             </td>
             <td>
             </td>
-            <td>
+            <td class="number_cell_foot">
                 <%: Model.GameResults.Sum(t => t.HomeTeamScore) %>
             </td>
-            <td>
+            <td class="number_cell_foot">
                 <%: Model.GameResults.Sum(t => t.VisitingTeamScore) %>
             </td>
             <td>

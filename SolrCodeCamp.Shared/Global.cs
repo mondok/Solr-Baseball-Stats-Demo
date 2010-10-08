@@ -8,21 +8,22 @@ namespace SolrCodeCamp.Shared
     {
 
         /// <summary>
-        /// Gets the baseball game facet names in order Tuple<displayname, solrname>
+        /// Gets the baseball game facet names in order Tuple<displayname, solrname, order>
         /// </summary>
         /// <value>The baseball game facet names.</value>
-        public static Tuple<string,string>[] BaseballGameFacetNames
+        public static Tuple<string, string, int>[] BaseballGameFacetNames
         {
             get
             {
                 return new[]
                            {
-                               new Tuple<string, string>("Home Team", "bg_homeTeam"),
-                               new Tuple<string, string>("Visiting Team", "bg_visitingTeam"),
-                               new Tuple<string, string>("Day of the Week", "bg_dayOfTheWeek"),
-                               new Tuple<string, string>("Year", "bg_year"),
-                               new Tuple<string, string>("Day/Night", "bg_dayOrNight"),
-                               new Tuple<string, string>("Home Plate Ump", "bg_homePlateUmpire")
+                               new Tuple<string, string, int>("Home Team", "bg_homeTeam",1),
+                               new Tuple<string, string, int>("Visiting Team", "bg_visitingTeam",2),
+                               new Tuple<string, string, int>("Day of the Week", "bg_dayOfTheWeek",3),
+                               new Tuple<string, string, int>("Year", "bg_year",5),
+                               new Tuple<string, string, int>("Day/Night", "bg_dayOrNight",6),
+                               new Tuple<string, string, int>("Home Plate Ump", "bg_homePlateUmpire",4),
+                               new Tuple<string, string, int>("Winner Location", "bg_winningLocation",7)
                            };
             }
         }

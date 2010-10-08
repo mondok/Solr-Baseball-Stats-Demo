@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<SolrCodeCamp.BaseballWeb.Models.BaseballView>" %>
-<%@ Import Namespace="SolrCodeCamp.BaseballWeb.Models" %>
+<%@ Import Namespace="SolrCodeCamp.Shared" %>
+
 <% foreach (var facet in this.Model.Facets)
    { %>
 <div>

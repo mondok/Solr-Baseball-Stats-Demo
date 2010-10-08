@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace SolrCodeCamp.BaseballWeb.Models
 {
-    public static class Helpers
+    public static class HtmlHelpers
     {
         public static string ResolveUrl(this HtmlHelper helper, string path)
         {

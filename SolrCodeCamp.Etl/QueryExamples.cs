@@ -13,11 +13,11 @@ namespace SolrCodeCamp.Etl
 {
     public class QueryExamples
     {
-        private ISolrOperations<BaseballGame> _solr;
+        private ISolrOperations<BaseballGame> _solrOperations;
 
-        public QueryExamples(ISolrOperations<BaseballGame> solrOperations)
+        public QueryExamples(ISolrOperations<BaseballGame> solrOperationsOperations)
         {
-            _solr = solrOperations;
+            _solrOperations = solrOperationsOperations;
         }
 
         public void RunFacetExample()
@@ -37,7 +37,7 @@ namespace SolrCodeCamp.Etl
             // we just want the facets, not data
             queryOptions.Rows = 0;
 
-            ISolrQueryResults<BaseballGame> results = _solr.Query(SolrQuery.All, queryOptions);
+            ISolrQueryResults<BaseballGame> results = _solrOperations.Query(SolrQuery.All, queryOptions);
 
             DateFacetingResult dateFacetResults = results.FacetDates["bg_date"];
 
@@ -46,7 +46,7 @@ namespace SolrCodeCamp.Etl
 
         public void RunTextSearchExample(string searchTerm)
         {
-            ISolrQueryResults<BaseballGame> results = _solr.Query(new SolrQuery(searchTerm));
+            ISolrQueryResults<BaseballGame> results = _solrOperations.Query(new SolrQuery(searchTerm));
 
             List<BaseballGame> gameResults = results.ToList();
         }
@@ -54,7 +54,7 @@ namespace SolrCodeCamp.Etl
         public void RunRangeSearchExample(int startYear, int endYear)
         {
             ISolrQueryResults<BaseballGame> results =
-                _solr.Query(new SolrQueryByRange<int>("bg_year", startYear, endYear));
+                _solrOperations.Query(new SolrQueryByRange<int>("bg_year", startYear, endYear));
 
             List<BaseballGame> gameResults = results.ToList();
 

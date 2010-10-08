@@ -1,6 +1,6 @@
 body
 {
-    background-color:#CCFFCC;
+	background-color: #CCFFCC;
 }
 .facet_box
 {
@@ -8,15 +8,38 @@ body
 }
 .facet_title
 {
-	font-weight:bold;
+	font-weight: bold;
 }
 
 #query_results
 {
-    background-color:#FFF;
+	background-color: #FFF;
 }
 
 #query_results td
 {
- padding:10px;   
+	padding: 10px;
+}
+
+.number_cell
+{
+	text-align: right;
+}
+
+.number_cell_foot
+{
+	text-align: right;
+	font-weight:bold;
+	border-top:1px solid #000;
+}
+
+.records_found
+{
+	font-weight:bold;
+	float:right;
+}
+
+.clear
+{
+	clear:both;
 }

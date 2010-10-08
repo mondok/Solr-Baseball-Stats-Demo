@@ -80,8 +80,7 @@
     </Compile>
     <Compile Include="Models\BaseballQueryBuilder.cs" />
     <Compile Include="Models\BaseballView.cs" />
-    <Compile Include="Models\Global.cs" />
-    <Compile Include="Models\Helpers.cs" />
+    <Compile Include="Models\HtmlHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

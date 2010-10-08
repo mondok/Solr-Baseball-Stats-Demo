@@ -91,6 +91,9 @@ namespace SolrCodeCamp.Etl
 
                     people.TryGetValue(row[77].ToString(), out homeUmp);
                     game.HomePlateUmpireName = homeUmp;
+                    game.Winner = (game.HomeTeamScore > game.VisitingTeamScore)
+                                      ? WinningLocation.Home
+                                      : WinningLocation.Visitor;
                     games.Add(game);
                     idCounter++;
                 }
