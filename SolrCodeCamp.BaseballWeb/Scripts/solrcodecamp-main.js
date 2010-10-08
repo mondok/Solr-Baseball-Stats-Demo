@@ -4,6 +4,7 @@ var sortDir = 'A';
 
 $(function () {
     $('.facet_box').live('click', updatePage);
+    $('#btnSearch').live('click', updatePage);
     $('.result_sort').live('click', function (e) { setSort($(this)); });
     currentSort = $('.current_sort_header').attr('id').replace('id_', '');
 
@@ -27,6 +28,7 @@ function setSort(arg) {
 }
 
 function updatePage() {
+    var searchTerm = $('#txtSearch').val();
     $.blockUI({ css: { backgroundColor: '#f00', color: '#fff'} });
     var values = $('.facet_box').selectedValues();
 
@@ -34,7 +36,7 @@ function updatePage() {
         type: 'POST',
         url: '../Home/Query',
         success: success,
-        data: 'sortTerm=' + currentSort + '&sortDir=' + sortDir + '&facets=' + values,
+        data: 'searchTerm=' + searchTerm + '&sortTerm=' + currentSort + '&sortDir=' + sortDir + '&facets=' + values,
         dataType: 'html'
     });
 }

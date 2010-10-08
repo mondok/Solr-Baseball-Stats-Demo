@@ -27,6 +27,9 @@
             <th>
                 <%= Html.TableHeaderLink(this.Model, "bg_homePlateUmpire", "Home Plate Umpire")%>
             </th>
+            <th>
+                <%= Html.TableHeaderLink(this.Model, "bg_winningPitcher", "Winning Pitcher")%>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -39,10 +42,10 @@
             <td>
                 <%: result.VisitingTeam %>
             </td>
-            <td class="number">
+            <td>
                 <%: result.HomeTeamScore %>
             </td>
-            <td class="number">
+            <td>
                 <%: result.VisitingTeamScore %>
             </td>
             <td>
@@ -57,6 +60,9 @@
             <td>
                 <%: result.HomePlateUmpireName %>
             </td>
+            <td>
+                <%: result.WinningPitcher %>
+            </td>
         </tr>
         <%
             }%>
@@ -67,10 +73,10 @@
             </td>
             <td>
             </td>
-            <td class="number">
+            <td>
                 <%: Model.GameResults.Sum(t => t.HomeTeamScore) %>
             </td>
-            <td class="number">
+            <td>
                 <%: Model.GameResults.Sum(t => t.VisitingTeamScore) %>
             </td>
             <td>

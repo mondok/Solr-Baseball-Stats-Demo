@@ -58,6 +58,9 @@
     <Reference Include="SolrNet">
       <HintPath>..\Dependencies\SolrNet.dll</HintPath>
     </Reference>
+    <Reference Include="SolrNet.DSL">
+      <HintPath>..\Dependencies\SolrNet.DSL.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -67,8 +70,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryExamples.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

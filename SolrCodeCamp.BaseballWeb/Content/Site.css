@@ -11,11 +11,6 @@ body
 	font-weight:bold;
 }
 
-.number
-{
-	text-align:right;	
-}
-
 #query_results
 {
     background-color:#FFF;
@@ -24,9 +19,4 @@ body
 #query_results td
 {
  padding:10px;   
-}
-
-#query_results tfoot
-{
-	font-weight:bold;	
 }

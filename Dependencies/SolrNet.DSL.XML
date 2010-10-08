@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SolrNet.DSL</name>
+    </assembly>
+    <members>
+        <member name="M:SolrNet.DSL.Impl.IDSLFacetFieldOptions`1.LimitTo(System.Int32)">
+            <summary>
+            Maximum number of constraint counts that should be returned for the facet fields. 
+            A negative value means unlimited. 
+            The default value is 100. 
+            </summary>
+        </member>
+        <member name="M:SolrNet.DSL.Impl.IDSLFacetFieldOptions`1.DontSortByCount">
+            <summary>
+            Set to true, this parameter indicates that constraints should be sorted by their count. 
+            If false, facets will be in their natural index order (unicode). 
+            For terms in the ascii range, this will be alphabetically sorted. 
+            The default is true if Limit is greater than 0, false otherwise.
+            </summary>
+        </member>
+        <member name="M:SolrNet.DSL.Impl.IDSLFacetFieldOptions`1.WithPrefix(System.String)">
+            <summary>
+            Limits the terms on which to facet to those starting with the given string prefix.
+            </summary>
+        </member>
+        <member name="M:SolrNet.DSL.Impl.IDSLFacetFieldOptions`1.WithMinCount(System.Int32)">
+            <summary>
+            Minimum counts for facet fields that should be included in the response.
+            The default value is 0.
+            </summary>
+        </member>
+        <member name="M:SolrNet.DSL.Impl.IDSLFacetFieldOptions`1.StartingAt(System.Int32)">
+            <summary>
+            Indicates an offset into the list of constraints to allow paging. 
+            The default value is 0. 
+            </summary>
+        </member>
+        <member name="M:SolrNet.DSL.Impl.IDSLFacetFieldOptions`1.IncludeMissing">
+            <summary>
+            Set to true this param indicates that in addition to the Term based constraints of a facet field, a count of all matching results which have no value for the field should be computed
+            Default is false
+            </summary>
+        </member>
+        <member name="T:SolrNet.DSL.Solr">
+            <summary>
+            Solr DSL Entry point
+            </summary>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Add``1(``0)">
+            <summary>
+            Adds/updates a document
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="document"></param>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Add``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Adds/updates a list of documents
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="documents"></param>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Query``1(System.String,System.Int32,System.Int32)">
+            <summary>
+            Executes a query
+            </summary>
+            <typeparam name="T">Document type</typeparam>
+            <param name="s">Query</param>
+            <param name="start">Pagination item start</param>
+            <param name="rows">Pagination item count</param>
+            <returns>Query results</returns>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Query``1(System.String)">
+            <summary>
+            Executes a query
+            </summary>
+            <typeparam name="T">Document type</typeparam>
+            <param name="s">Query</param>
+            <returns>Query results</returns>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Query``1(System.String,SolrNet.SortOrder)">
+            <summary>
+            Executes a query
+            </summary>
+            <typeparam name="T">Document type</typeparam>
+            <param name="s">Query</param>
+            <param name="order">Sort order</param>
+            <returns>Query results</returns>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Query``1(System.String,System.Collections.Generic.ICollection{SolrNet.SortOrder})">
+            <summary>
+            Executes a query
+            </summary>
+            <typeparam name="T">Document type</typeparam>
+            <param name="s">Query</param>
+            <param name="order">Sort orders</param>
+            <returns>Query results</returns>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Query``1(System.String,SolrNet.SortOrder,System.Int32,System.Int32)">
+            <summary>
+            Executes a query
+            </summary>
+            <typeparam name="T">Document type</typeparam>
+            <param name="s">Query</param>
+            <param name="order">Sort order</param>
+            <param name="start">Pagination item start</param>
+            <param name="rows">Pagination item count</param>
+            <returns>Query results</returns>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Query``1(System.String,System.Collections.Generic.ICollection{SolrNet.SortOrder},System.Int32,System.Int32)">
+            <summary>
+            Executes a query
+            </summary>
+            <typeparam name="T">Document type</typeparam>
+            <param name="s">Query</param>
+            <param name="order">Sort orders</param>
+            <param name="start">Pagination item start</param>
+            <param name="rows">Pagination item count</param>
+            <returns>Query results</returns>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Query``1(SolrNet.ISolrQuery)">
+            <summary>
+            Executes a query
+            </summary>
+            <typeparam name="T">Document type</typeparam>
+            <param name="q">Query</param>
+            <returns>Query results</returns>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Query``1(SolrNet.ISolrQuery,System.Int32,System.Int32)">
+            <summary>
+            Executes a query
+            </summary>
+            <typeparam name="T">Document type</typeparam>
+            <param name="q">Query</param>
+            <param name="start">Pagination item start</param>
+            <param name="rows">Pagination item count</param>
+            <returns>Query results</returns>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Query``1(SolrNet.SolrQuery,SolrNet.SortOrder)">
+            <summary>
+            Executes a query
+            </summary>
+            <typeparam name="T">Document type</typeparam>
+            <param name="query">Query</param>
+            <param name="order">Sort order</param>
+            <returns>Query results</returns>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Query``1(SolrNet.SolrQuery,System.Collections.Generic.ICollection{SolrNet.SortOrder})">
+            <summary>
+            Executes a query
+            </summary>
+            <typeparam name="T">Document type</typeparam>
+            <param name="query">Query</param>
+            <param name="orders">Sort orders</param>
+            <returns>Query results</returns>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Commit">
+            <summary>
+            Commits posted documents
+            </summary>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Commit(System.Boolean,System.Boolean)">
+            <summary>
+            Commits posted documents
+            </summary>
+            <param name="waitFlush">wait for flush</param>
+            <param name="waitSearcher">wait for new searcher</param>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Commit(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Commits posted documents
+            </summary>
+            <param name="waitFlush">wait for flush</param>
+            <param name="waitSearcher">wait for new searcher</param>
+            <param name="expungeDeletes">Merge segments with deletes away</param>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Commit(System.Boolean,System.Boolean,System.Boolean,System.Int32)">
+            <summary>
+            Commits posted documents
+            </summary>
+            <param name="waitFlush">wait for flush</param>
+            <param name="waitSearcher">wait for new searcher</param>
+            <param name="expungeDeletes">Merge segments with deletes away</param>
+            <param name="maxSegments">Optimizes down to, at most, this number of segments</param>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Optimize">
+            <summary>
+            Optimizes Solr's index
+            </summary>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Optimize(System.Boolean,System.Boolean)">
+            <summary>
+            Optimizes Solr's index
+            </summary>
+            <param name="waitFlush">Wait for flush</param>
+            <param name="waitSearcher">Wait for new searcher</param>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Optimize(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Optimizes Solr's index
+            </summary>
+            <param name="waitFlush">Wait for flush</param>
+            <param name="waitSearcher">Wait for new searcher</param>
+            <param name="expungeDeletes">Merge segments with deletes away</param>
+        </member>
+        <member name="M:SolrNet.DSL.Solr.Optimize(System.Boolean,System.Boolean,System.Boolean,System.Int32)">
+            <summary>
+            Optimizes Solr's index
+            </summary>
+            <param name="waitFlush">Wait for flush</param>
+            <param name="waitSearcher">Wait for new searcher</param>
+            <param name="expungeDeletes">Merge segments with deletes away</param>
+            <param name="maxSegments">Optimizes down to, at most, this number of segments</param>
+        </member>
+        <member name="P:SolrNet.DSL.Solr.Connection">
+            <summary>
+            thread-local or webcontext-local connection
+            </summary>
+            <seealso href="http://www.ayende.com/Blog/archive/7447.aspx"/>
+            <seealso href="http://rhino-tools.svn.sourceforge.net/svnroot/rhino-tools/trunk/rhino-commons/Rhino.Commons/LocalDataImpl/"/>
+        </member>
+    </members>
+</doc>

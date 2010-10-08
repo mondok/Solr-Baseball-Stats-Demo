@@ -19,6 +19,9 @@ namespace SolrCodeCamp.Shared
         [SolrField("bg_visitingTeam")]
         public string VisitingTeam { get; set; }
 
+        [SolrField("bg_winningPitcher")]
+        public string WinningPitcher { get; set; }
+
         // 3
         [SolrField("bg_dayOfTheWeek")]
         public string DayOfTheWeek { get; set;}

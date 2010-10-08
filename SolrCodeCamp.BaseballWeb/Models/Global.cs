@@ -23,7 +23,8 @@ namespace SolrCodeCamp.BaseballWeb.Models
                                new Tuple<string, string>("Day of the Week", "bg_dayOfTheWeek"),
                                new Tuple<string, string>("Year", "bg_year"),
                                new Tuple<string, string>("Day/Night", "bg_dayOrNight"),
-                               new Tuple<string, string>("Home Plate Ump", "bg_homePlateUmpire")
+                               new Tuple<string, string>("Home Plate Ump", "bg_homePlateUmpire"),
+                               new Tuple<string, string>("Winning Pitcher", "bg_winningPitcher")
                            };
             }
         }

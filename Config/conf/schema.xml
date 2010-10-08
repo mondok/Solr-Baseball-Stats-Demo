@@ -438,6 +438,7 @@
    <field name="bg_dayOrNight" type="string" indexed="true" stored="true" required="true" />
    <field name="bg_lengthOfGame" type="int" indexed="true" stored="true" required="true" />
    <field name="bg_homePlateUmpire" type="string" indexed="true" stored="true" required="false" />
+   <field name="bg_winningPitcher" type="string" indexed="true" stored="true" required="false" />
 
    <!-- catchall field, containing all other searchable text fields (implemented
         via copyField further on in this schema  -->
@@ -518,8 +519,10 @@
    <copyField source="bg_homeTeam" dest="text"/>
    <copyField source="bg_visitingTeam" dest="text"/>
    <copyField source="bg_homePlateUmpire" dest="text"/>
-	
-   <!-- Above, multiple source fields are copied to the [text] field. 
+  <copyField source="bg_winningPitcher" dest="text"/>
+
+
+  <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 
 	  destination field is to use the dynamic field syntax. 
 	  copyField also supports a maxChars to copy setting.  -->

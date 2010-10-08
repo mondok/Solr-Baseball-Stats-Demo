@@ -14,7 +14,7 @@ namespace SolrCodeCamp.BaseballWeb.Controllers
     public class HomeController : Controller
     {
         private ISolrOperations<BaseballGame> _solrOperator;
-        private BaseballQueryBuilder _queryBuilder;
+        private readonly BaseballQueryBuilder _queryBuilder;
 
         public HomeController()
         {
@@ -28,11 +28,14 @@ namespace SolrCodeCamp.BaseballWeb.Controllers
         {
             BaseballView baseballView = new BaseballView(_queryBuilder);
 
+            baseballView.ConstructView();
+
             return View(baseballView);
         }
 
-        public ActionResult Query(string sortTerm, string sortDir, string facets)
+        public ActionResult Query(string sortTerm, string sortDir, string facets, string searchTerm)
         {
+            _queryBuilder.SearchTerm = searchTerm;
             if (!string.IsNullOrEmpty(facets))
             {
                 facets.Split(',').ToList().ForEach(f =>
@@ -44,7 +47,9 @@ namespace SolrCodeCamp.BaseballWeb.Controllers
             }
             _queryBuilder.CurrentSortTerm = sortTerm;
             _queryBuilder.SortDirection = sortDir;
+            
             BaseballView baseballView = new BaseballView(_queryBuilder);
+            baseballView.ConstructView();
 
             return View(baseballView);
         }

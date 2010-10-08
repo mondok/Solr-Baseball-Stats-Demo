@@ -15,7 +15,13 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
+<!-- 
+     For more details about configurations options that may appear in this 
+     file, see http://wiki.apache.org/solr/SolrConfigXml.
 
+     Specifically, the Solr Config can support XInclude, which may make it easier to manage
+     the configuration.  See https://issues.apache.org/jira/browse/SOLR-1167
+-->
 <config>
   <!-- Set this to 'false' if you want solr to continue working after it has 
        encountered an severe configuration error.  In a production environment, 
@@ -26,14 +32,50 @@
      -->
   <abortOnConfigurationError>${solr.abortOnConfigurationError:true}</abortOnConfigurationError>
 
+  <!-- lib directives can be used to instruct Solr to load an Jars identified
+       and use them to resolve any "plugins" specified in your solrconfig.xml or
+       schema.xml (ie: Analyzers, Request Handlers, etc...).
+
+       All directories and paths are resolved relative the instanceDir.
+
+       If a "./lib" directory exists in your instanceDir, all files found in it
+       are included as if you had used the following syntax...
+       
+              <lib dir="./lib" />
+    -->
+  <!-- A dir option by itself adds any files found in the directory to the
+       classpath, this is useful for including all jars in a directory.
+    -->
+  <lib dir="../../contrib/extraction/lib" />
+  <!-- When a regex is specified in addition to a directory, only the files in that
+       directory which completely match the regex (anchored on both ends)
+       will be included.
+    -->
+  <lib dir="../../dist/" regex="apache-solr-cell-\d.*\.jar" />
+  <lib dir="../../dist/" regex="apache-solr-clustering-\d.*\.jar" />
+  <!-- If a dir option (with or without a regex) is used and nothing is found
+       that matches, it will be ignored
+    -->
+  <lib dir="../../contrib/clustering/lib/downloads/" />
+  <lib dir="../../contrib/clustering/lib/" />
+  <lib dir="/total/crap/dir/ignored" />
+  <!-- an exact path can be used to specify a specific file.  This will cause
+       a serious error to be logged if it can't be loaded.
+  <lib path="../a-jar-that-does-not-exist.jar" /> 
+  -->
+
+
   <!-- Used to specify an alternate directory to hold all index data
        other than the default ./data under the Solr home.
        If replication is in use, this should match the replication configuration. -->
   <dataDir>${solr.data.dir:./solr/data}</dataDir>
 
 
+  <!-- WARNING: this <indexDefaults> section only provides defaults for index writers
+       in general. See also the <mainIndex> section after that when changing parameters
+       for Solr's main Lucene index. -->
   <indexDefaults>
-   <!-- Values here affect all index writers and act as a default unless overridden. -->
+    <!-- Values here affect all index writers and act as a default unless overridden. -->
     <useCompoundFile>false</useCompoundFile>
 
     <mergeFactor>10</mergeFactor>
@@ -70,7 +112,7 @@
 
      Other implementations of MergePolicy must have a no-argument constructor
      -->
-    <!--<mergePolicy>org.apache.lucene.index.LogByteSizeMergePolicy</mergePolicy>-->
+    <!--<mergePolicy class="org.apache.lucene.index.LogByteSizeMergePolicy"/>-->
 
     <!--
      Expert:
@@ -79,13 +121,9 @@
      background using separate threads.  The SerialMergeScheduler (Lucene 2.2
      default) does not.
      -->
-    <!--<mergeScheduler>org.apache.lucene.index.ConcurrentMergeScheduler</mergeScheduler>-->
+    <!--<mergeScheduler class="org.apache.lucene.index.ConcurrentMergeScheduler"/>-->
 
-    <!--  To aid in advanced debugging, you may turn on IndexWriter debug logging.
-     Uncommenting this and setting to true will set the file that the underlying
-     Lucene IndexWriter will write its debug infostream to.  -->
-	  <!-- <infoStream file="/path/file">false</infoStream> -->
-	  
+
     <!--
       This option specifies which Lucene LockFactory implementation to use.
       
@@ -99,6 +137,10 @@
        if not specified.)
     -->
     <lockType>native</lockType>
+    <!--
+     Expert:
+    Controls how often Lucene loads terms into memory -->
+    <!--<termIndexInterval>256</termIndexInterval>-->
   </indexDefaults>
 
   <mainIndex>
@@ -109,7 +151,8 @@
     <!-- Deprecated -->
     <!--<maxBufferedDocs>1000</maxBufferedDocs>-->
     <!--<maxMergeDocs>2147483647</maxMergeDocs>-->
-    <maxFieldLength>10000</maxFieldLength>
+
+    <!-- inherit from indexDefaults <maxFieldLength>10000</maxFieldLength> -->
 
     <!-- If true, unlock any held write or commit locks on startup. 
          This defeats the locking mechanism that allows multiple
@@ -118,11 +161,16 @@
          This is not needed if lock type is 'none' or 'single'
      -->
     <unlockOnStartup>false</unlockOnStartup>
-    
+
     <!-- If true, IndexReaders will be reopened (often more efficient) instead
          of closed and then opened.  -->
     <reopenReaders>true</reopenReaders>
-	  
+
+    <!--
+     Expert:
+    Controls how often Lucene loads terms into memory.  Default is 128 and is likely good for most everyone. -->
+    <!--<termIndexInterval>256</termIndexInterval>-->
+
     <!--
         Custom deletion policies can specified here. The class must
         implement org.apache.lucene.index.IndexDeletionPolicy.
@@ -137,10 +185,10 @@
         of the criteria.
     -->
     <deletionPolicy class="solr.SolrDeletionPolicy">
-      <!-- Keep only optimized commit points -->
-      <str name="keepOptimizedOnly">false</str>
-      <!-- The maximum number of commit points to be kept -->
+      <!-- The number of commit points to be kept -->
       <str name="maxCommitsToKeep">1</str>
+      <!-- The number of optimized commit points to be kept -->
+      <str name="maxOptimizedCommitsToKeep">0</str>
       <!--
           Delete all commit points once they have reached the given age.
           Supports DateMathParser syntax e.g.
@@ -149,6 +197,11 @@
           <str name="maxCommitAge">1DAY</str>
       -->
     </deletionPolicy>
+
+    <!--  To aid in advanced debugging, you may turn on IndexWriter debug logging.
+      Setting to true will set the file that the underlying Lucene IndexWriter
+      will write its debug infostream to.  -->
+    <infoStream file="INFOSTREAM.txt">false</infoStream>
 
   </mainIndex>
 
@@ -211,19 +264,35 @@
     -->
 
   </updateHandler>
-  
+
   <!-- Use the following format to specify a custom IndexReaderFactory - allows for alternate
        IndexReader implementations.
+
+       ** Experimental Feature **
+       Please note - Using a custom IndexReaderFactory may prevent certain other features
+       from working. The API to IndexReaderFactory may change without warning or may even
+       be removed from future releases if the problems cannot be resolved.
+
+       ** Features that may not work with custom IndexReaderFactory **
+       The ReplicationHandler assumes a disk-resident index. Using a custom
+       IndexReader implementation may cause incompatibility with ReplicationHandler and
+       may cause replication to not work correctly. See SOLR-1366 for details.
+
   <indexReaderFactory name="IndexReaderFactory" class="package.class">
     Parameters as required by the implementation
   </indexReaderFactory >
   -->
+  <!-- To set the termInfosIndexDivisor, do this: -->
+  <!--<indexReaderFactory name="IndexReaderFactory" class="org.apache.solr.core.StandardIndexReaderFactory">
+    <int name="termInfosIndexDivisor">12</int>
+  </indexReaderFactory >-->
 
 
   <query>
-    <!-- Maximum number of clauses in a boolean query... can affect
-        range or prefix queries that expand to big boolean
-        queries.  An exception is thrown if exceeded.  -->
+    <!-- Maximum number of clauses in a boolean query... in the past, this affected
+        range or prefix queries that expanded to big boolean queries - built in Solr 
+        query parsers no longer create queries with this limitation. 
+        An exception is thrown if exceeded.  -->
     <maxBooleanClauses>1024</maxBooleanClauses>
 
 
@@ -264,7 +333,7 @@
       />
     -->
 
-   <!-- queryResultCache caches results of searches - ordered lists of
+    <!-- queryResultCache caches results of searches - ordered lists of
          document ids (DocList) based on a query, a sort, and the range
          of documents requested.  -->
     <queryResultCache
@@ -273,7 +342,7 @@
       initialSize="512"
       autowarmCount="0"/>
 
-  <!-- documentCache caches Lucene Document objects (the stored fields for each document).
+    <!-- documentCache caches Lucene Document objects (the stored fields for each document).
        Since Lucene internal document ids are transient, this cache will not be autowarmed.  -->
     <documentCache
       class="solr.LRUCache"
@@ -303,7 +372,7 @@
       />
     -->
 
-   <!-- An optimization that attempts to use a filter to satisfy a search.
+    <!-- An optimization that attempts to use a filter to satisfy a search.
          If the requested sort does not include score, then the filterCache
          will be checked for a filter matching the query. If found, the filter
          will be used as the source of document ids, and then the sort will be
@@ -311,7 +380,7 @@
     <useFilterForSortedQuery>true</useFilterForSortedQuery>
    -->
 
-   <!-- An optimization for use with the queryResultCache.  When a search
+    <!-- An optimization for use with the queryResultCache.  When a search
          is requested, a superset of the requested number of document ids
          are collected.  For example, if a search for a particular query
          requests matching documents 10 through 19, and queryWindowSize is 50,
@@ -345,8 +414,14 @@
          requests or to gain autowarming data from. -->
     <listener event="firstSearcher" class="solr.QuerySenderListener">
       <arr name="queries">
-        <lst> <str name="q">solr rocks</str><str name="start">0</str><str name="rows">10</str></lst>
-        <lst><str name="q">static firstSearcher warming query from solrconfig.xml</str></lst>
+        <lst>
+          <str name="q">solr rocks</str>
+          <str name="start">0</str>
+          <str name="rows">10</str>
+        </lst>
+        <lst>
+          <str name="q">static firstSearcher warming query from solrconfig.xml</str>
+        </lst>
       </arr>
     </listener>
 
@@ -381,7 +456,7 @@
     <!-- <httpCaching never304="true"> -->
     <httpCaching lastModifiedFrom="openTime"
                  etagSeed="Solr">
-       <!-- lastModFrom="openTime" is the default, the Last-Modified value
+      <!-- lastModFrom="openTime" is the default, the Last-Modified value
             (and validation against If-Modified-Since requests) will all be
             relative to when the current Searcher was opened.
             You can change it to lastModFrom="dirLastMod" if you want the
@@ -396,7 +471,7 @@
             lastModifiedFrom and etagSeed are both ignored if you use the
             never304="true" option.
        -->
-       <!-- If you include a <cacheControl> directive, it will be used to
+      <!-- If you include a <cacheControl> directive, it will be used to
             generate a Cache-Control header, as well as an Expires header
             if the value contains "max-age="
 
@@ -405,7 +480,7 @@
             You can use the <cacheControl> option even if you have set
             never304="true"
        -->
-       <!-- <cacheControl>max-age=30, public</cacheControl> -->
+      <!-- <cacheControl>max-age=30, public</cacheControl> -->
     </httpCaching>
   </requestDispatcher>
 
@@ -420,38 +495,31 @@
   -->
   <requestHandler name="standard" class="solr.SearchHandler" default="true">
     <!-- default values for query parameters -->
-     <lst name="defaults">
-       <str name="echoParams">explicit</str>
-       <!--
+    <lst name="defaults">
+      <str name="echoParams">explicit</str>
+      <!--
        <int name="rows">10</int>
        <str name="fl">*</str>
        <str name="version">2.1</str>
         -->
-     </lst>
-     <arr name="last-components">
-       <str>spellcheck</str>
-     </arr>
+    </lst>
   </requestHandler>
 
-<!-- Please refer to http://wiki.apache.org/solr/SolrReplication for details on configuring replication -->
-<!--Master config-->
-<!--
+  <!-- Please refer to http://wiki.apache.org/solr/SolrReplication for details on configuring replication -->
+  <!-- remove the <lst name="master"> section if this is just a slave -->
+  <!-- remove  the <lst name="slave"> section if this is just a master -->
+  <!--
 <requestHandler name="/replication" class="solr.ReplicationHandler" >
     <lst name="master">
-        <str name="replicateAfter">commit</str>
-         <str name="confFiles">schema.xml,stopwords.txt</str>
+      <str name="replicateAfter">commit</str>
+      <str name="replicateAfter">startup</str>
+      <str name="confFiles">schema.xml,stopwords.txt</str>
     </lst>
-</requestHandler>
--->
-<!-- Slave config-->
-<!--
-<requestHandler name="/replication" class="solr.ReplicationHandler">
     <lst name="slave">
-        <str name="masterUrl">http://localhost:8983/solr/replication</str>
-        <str name="pollInterval">00:00:60</str>  
-     </lst>
-</requestHandler>
--->
+      <str name="masterUrl">http://localhost:8983/solr/replication</str>
+      <str name="pollInterval">00:00:60</str>
+    </lst>
+</requestHandler>-->
 
   <!-- DisMaxRequestHandler allows easy searching across multiple fields
        for simple user-entered phrases.  It's implementation is now
@@ -461,34 +529,35 @@
    -->
   <requestHandler name="dismax" class="solr.SearchHandler" >
     <lst name="defaults">
-     <str name="defType">dismax</str>
-     <str name="echoParams">explicit</str>
-     <float name="tie">0.01</float>
-     <str name="qf">
+      <str name="defType">dismax</str>
+      <str name="echoParams">explicit</str>
+      <float name="tie">0.01</float>
+      <str name="qf">
         text^0.5 features^1.0 name^1.2 sku^1.5 id^10.0 manu^1.1 cat^1.4
-     </str>
-     <str name="pf">
+      </str>
+      <str name="pf">
         text^0.2 features^1.1 name^1.5 manu^1.4 manu_exact^1.9
-     </str>
-     <str name="bf">
-        ord(popularity)^0.5 recip(rord(price),1,1000,1000)^0.3
-     </str>
-     <str name="fl">
+      </str>
+      <str name="bf">
+        popularity^0.5 recip(price,1,1000,1000)^0.3
+      </str>
+      <str name="fl">
         id,name,price,score
-     </str>
-     <str name="mm">
+      </str>
+      <str name="mm">
         2&lt;-1 5&lt;-2 6&lt;90%
-     </str>
-     <int name="ps">100</int>
-     <str name="q.alt">*:*</str>
-     <!-- example highlighter config, enable per-query with hl=true -->
-     <str name="hl.fl">text features name</str>
-     <!-- for this field, we want no fragmenting, just highlighting -->
-     <str name="f.name.hl.fragsize">0</str>
-     <!-- instructs Solr to return the field itself if no query terms are
+      </str>
+      <int name="ps">100</int>
+      <str name="q.alt">*:*</str>
+      <!-- example highlighter config, enable per-query with hl=true -->
+      <str name="hl.fl">text features name</str>
+      <!-- for this field, we want no fragmenting, just highlighting -->
+      <str name="f.name.hl.fragsize">0</str>
+      <!-- instructs Solr to return the field itself if no query terms are
           found -->
-     <str name="f.name.hl.alternateField">name</str>
-     <str name="f.text.hl.fragmenter">regex</str> <!-- defined below -->
+      <str name="f.name.hl.alternateField">name</str>
+      <str name="f.text.hl.fragmenter">regex</str>
+      <!-- defined below -->
     </lst>
   </requestHandler>
 
@@ -497,14 +566,14 @@
     -->
   <requestHandler name="partitioned" class="solr.SearchHandler" >
     <lst name="defaults">
-     <str name="defType">dismax</str>
-     <str name="echoParams">explicit</str>
-     <str name="qf">text^0.5 features^1.0 name^1.2 sku^1.5 id^10.0</str>
-     <str name="mm">2&lt;-1 5&lt;-2 6&lt;90%</str>
-     <!-- This is an example of using Date Math to specify a constantly
+      <str name="defType">dismax</str>
+      <str name="echoParams">explicit</str>
+      <str name="qf">text^0.5 features^1.0 name^1.2 sku^1.5 id^10.0</str>
+      <str name="mm">2&lt;-1 5&lt;-2 6&lt;90%</str>
+      <!-- This is an example of using Date Math to specify a constantly
           moving date range in a config...
        -->
-     <str name="bq">incubationdate_dt:[* TO NOW/DAY-1MONTH]^2.2</str>
+      <str name="bq">incubationdate_dt:[* TO NOW/DAY-1MONTH]^2.2</str>
     </lst>
     <!-- In addition to defaults, "appends" params can be specified
          to identify values which should be appended to the list of
@@ -580,9 +649,8 @@
       <str>myLastComponentName</str>
     </arr>
   -->
-	<searchComponent name="query" class="org.apache.solr.handler.component.CollapseComponent" />
-  
-   <!-- The spell check component can return a list of alternative spelling
+
+  <!-- The spell check component can return a list of alternative spelling
   suggestions.  -->
   <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
 
@@ -651,10 +719,82 @@
     </arr>
   </requestHandler>
 
+  <!-- Clustering Component
+       http://wiki.apache.org/solr/ClusteringComponent
+       This relies on third party jars which are not included in the release.
+       To use this component (and the "/clustering" handler)
+       Those jars will need to be downloaded, and you'll need to set the
+       solr.cluster.enabled system property when running solr...
+          java -Dsolr.clustering.enabled=true -jar start.jar
+    -->
+  <searchComponent
+    name="clusteringComponent"
+    enable="${solr.clustering.enabled:false}"
+    class="org.apache.solr.handler.clustering.ClusteringComponent" >
+    <!-- Declare an engine -->
+    <lst name="engine">
+      <!-- The name, only one can be named "default" -->
+      <str name="name">default</str>
+      <!-- 
+           Class name of Carrot2 clustering algorithm. Currently available algorithms are:
+           
+           * org.carrot2.clustering.lingo.LingoClusteringAlgorithm
+           * org.carrot2.clustering.stc.STCClusteringAlgorithm
+           
+           See http://project.carrot2.org/algorithms.html for the algorithm's characteristics.
+        -->
+      <str name="carrot.algorithm">org.carrot2.clustering.lingo.LingoClusteringAlgorithm</str>
+      <!-- 
+           Overriding values for Carrot2 default algorithm attributes. For a description
+           of all available attributes, see: http://download.carrot2.org/stable/manual/#chapter.components.
+           Use attribute key as name attribute of str elements below. These can be further
+           overridden for individual requests by specifying attribute key as request
+           parameter name and attribute value as parameter value.
+        -->
+      <str name="LingoClusteringAlgorithm.desiredClusterCountBase">20</str>
+    </lst>
+    <lst name="engine">
+      <str name="name">stc</str>
+      <str name="carrot.algorithm">org.carrot2.clustering.stc.STCClusteringAlgorithm</str>
+    </lst>
+  </searchComponent>
+  <requestHandler name="/clustering"
+                  enable="${solr.clustering.enabled:false}"
+                  class="solr.SearchHandler">
+    <lst name="defaults">
+      <bool name="clustering">true</bool>
+      <str name="clustering.engine">default</str>
+      <bool name="clustering.results">true</bool>
+      <!-- The title field -->
+      <str name="carrot.title">name</str>
+      <str name="carrot.url">id</str>
+      <!-- The field to cluster on -->
+      <str name="carrot.snippet">features</str>
+      <!-- produce summaries -->
+      <bool name="carrot.produceSummary">true</bool>
+      <!-- the maximum number of labels per cluster -->
+      <!--<int name="carrot.numDescriptions">5</int>-->
+      <!-- produce sub clusters -->
+      <bool name="carrot.outputSubClusters">false</bool>
+    </lst>
+    <arr name="last-components">
+      <str>clusteringComponent</str>
+    </arr>
+  </requestHandler>
+
+  <!-- Solr Cell: http://wiki.apache.org/solr/ExtractingRequestHandler -->
   <requestHandler name="/update/extract" class="org.apache.solr.handler.extraction.ExtractingRequestHandler" startup="lazy">
     <lst name="defaults">
+      <!-- All the main content goes into "text"... if you need to return
+           the extracted text or do highlighting, use a stored field. -->
+      <str name="fmap.content">text</str>
+      <str name="lowernames">true</str>
       <str name="uprefix">ignored_</str>
-      <str name="map.content">text</str>
+
+      <!-- capture link hrefs but ignore div attributes -->
+      <str name="captureAttr">true</str>
+      <str name="fmap.a">links</str>
+      <str name="fmap.div">ignored_</str>
     </lst>
   </requestHandler>
 
@@ -664,9 +804,9 @@
   <searchComponent name="termsComponent" class="org.apache.solr.handler.component.TermsComponent"/>
 
   <requestHandler name="/terms" class="org.apache.solr.handler.component.SearchHandler">
-     <lst name="defaults">
+    <lst name="defaults">
       <bool name="terms">true</bool>
-    </lst>     
+    </lst>
     <arr name="components">
       <str>termsComponent</str>
     </arr>
@@ -792,45 +932,54 @@
   <!-- Echo the request contents back to the client -->
   <requestHandler name="/debug/dump" class="solr.DumpRequestHandler" >
     <lst name="defaults">
-     <str name="echoParams">explicit</str> <!-- for all params (including the default etc) use: 'all' -->
-     <str name="echoHandler">true</str>
+      <str name="echoParams">explicit</str>
+      <!-- for all params (including the default etc) use: 'all' -->
+      <str name="echoHandler">true</str>
     </lst>
   </requestHandler>
 
   <highlighting>
-   <!-- Configure the standard fragmenter -->
-   <!-- This could most likely be commented out in the "default" case -->
-   <fragmenter name="gap" class="org.apache.solr.highlight.GapFragmenter" default="true">
-    <lst name="defaults">
-     <int name="hl.fragsize">100</int>
-    </lst>
-   </fragmenter>
+    <!-- Configure the standard fragmenter -->
+    <!-- This could most likely be commented out in the "default" case -->
+    <fragmenter name="gap" class="org.apache.solr.highlight.GapFragmenter" default="true">
+      <lst name="defaults">
+        <int name="hl.fragsize">100</int>
+      </lst>
+    </fragmenter>
 
-   <!-- A regular-expression-based fragmenter (f.i., for sentence extraction) -->
-   <fragmenter name="regex" class="org.apache.solr.highlight.RegexFragmenter">
-    <lst name="defaults">
-      <!-- slightly smaller fragsizes work better because of slop -->
-      <int name="hl.fragsize">70</int>
-      <!-- allow 50% slop on fragment sizes -->
-      <float name="hl.regex.slop">0.5</float>
-      <!-- a basic sentence pattern -->
-      <str name="hl.regex.pattern">[-\w ,/\n\"']{20,200}</str>
-    </lst>
-   </fragmenter>
+    <!-- A regular-expression-based fragmenter (f.i., for sentence extraction) -->
+    <fragmenter name="regex" class="org.apache.solr.highlight.RegexFragmenter">
+      <lst name="defaults">
+        <!-- slightly smaller fragsizes work better because of slop -->
+        <int name="hl.fragsize">70</int>
+        <!-- allow 50% slop on fragment sizes -->
+        <float name="hl.regex.slop">0.5</float>
+        <!-- a basic sentence pattern -->
+        <str name="hl.regex.pattern">[-\w ,/\n\"']{20,200}</str>
+      </lst>
+    </fragmenter>
 
-   <!-- Configure the standard formatter -->
-   <formatter name="html" class="org.apache.solr.highlight.HtmlFormatter" default="true">
-    <lst name="defaults">
-     <str name="hl.simple.pre"><![CDATA[<em>]]></str>
-     <str name="hl.simple.post"><![CDATA[</em>]]></str>
-    </lst>
-   </formatter>
+    <!-- Configure the standard formatter -->
+    <formatter name="html" class="org.apache.solr.highlight.HtmlFormatter" default="true">
+      <lst name="defaults">
+        <str name="hl.simple.pre"><![CDATA[<em>]]></str>
+        <str name="hl.simple.post"><![CDATA[</em>]]></str>
+      </lst>
+    </formatter>
   </highlighting>
 
   <!-- An example dedup update processor that creates the "id" field on the fly
        based on the hash code of some other fields.  This example has overwriteDupes
        set to false since we are using the id field as the signatureField and Solr
-       will maintain uniqueness based on that anyway. -->
+       will maintain uniqueness based on that anyway. 
+       
+       You have to link the chain to an update handler above to use it ie:
+         <requestHandler name="/update "class="solr.XmlUpdateRequestHandler">
+           <lst name="defaults">
+             <str name="update.processor">dedupe</str>
+           </lst>
+         </requestHandler>  
+  -->
   <!--
   <updateRequestProcessorChain name="dedupe">
     <processor class="org.apache.solr.update.processor.SignatureUpdateProcessorFactory">

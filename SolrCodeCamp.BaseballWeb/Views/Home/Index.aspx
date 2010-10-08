@@ -7,6 +7,12 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <table>
         <tr>
+            <td colspan="2">
+                <input type="text" name="txtSearch" id="txtSearch" /><input type="button" id="btnSearch"
+                    value="Search" />
+            </td>
+        </tr>
+        <tr>
             <td valign="top" id="facet_list">
                 <%
                     Html.RenderPartial("FacetList", this.Model); %>

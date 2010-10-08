@@ -11,7 +11,7 @@ namespace SolrCodeCamp.BaseballWeb.Models
 {
     public class BaseballQueryBuilder
     {
-        private ISolrOperations<BaseballGame> _solrOperator;
+        private readonly ISolrOperations<BaseballGame> _solrOperations;
 
         public List<Tuple<string, string>> AppliedFacets { get; set; }
 
@@ -19,9 +19,17 @@ namespace SolrCodeCamp.BaseballWeb.Models
 
         public string SortDirection { get; set; }
 
+        public string SearchTerm { get; set; }
+
         public BaseballQueryBuilder()
         {
-            _solrOperator = ServiceLocator.Current.GetInstance<ISolrOperations<BaseballGame>>();
+            _solrOperations = ServiceLocator.Current.GetInstance<ISolrOperations<BaseballGame>>();
+            this.AppliedFacets = new List<Tuple<string, string>>();
+        }
+
+        public BaseballQueryBuilder(ISolrOperations<BaseballGame> solrOperations)
+        {
+            _solrOperations = solrOperations;
             this.AppliedFacets = new List<Tuple<string, string>>();
         }
 
@@ -60,9 +68,17 @@ namespace SolrCodeCamp.BaseballWeb.Models
                 options.AddFilterQueries(multipleCriteriaQuery);
             }
             options.OrderBy.Add(new SortOrder(this.CurrentSortTerm, this.SortDirection == "D" ? Order.DESC : Order.ASC));
-            SolrQueryByField queryByField = new SolrQueryByField("docType", DocType.BaseballGame.ToString());
+            options.AddFilterQueries(new SolrQueryByField("docType", DocType.BaseballGame.ToString()));
+            ISolrQuery finalQuery = SolrQuery.All;
 
-            return _solrOperator.Query(queryByField, options);
+            if (!string.IsNullOrEmpty(this.SearchTerm))
+            {
+                finalQuery = new SolrQuery(this.SearchTerm);
+            }
+
+
+
+            return _solrOperations.Query(finalQuery, options);
         }
     }
 }

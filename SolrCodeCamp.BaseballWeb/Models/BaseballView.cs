@@ -12,25 +12,37 @@ namespace SolrCodeCamp.BaseballWeb.Models
         // display name, solr name, count
         public Dictionary<string, List<Tuple<string, int>>> Facets { get; set; }
 
-        public string SortTerm { get; set; }
+        public string SortTerm
+        {
+            get
+            {
+                return _queryBuilder.CurrentSortTerm;
+            }
+        }
 
-        public string SortDirection { get; set; }
+        public string SortDirection
+        {
+            get
+            {
+                return _queryBuilder.SortDirection;
+            }
+        }
 
         public List<BaseballGame> GameResults { get; set; }
 
         private ISolrQueryResults<BaseballGame> _queryResult;
 
+        private BaseballQueryBuilder _queryBuilder;
+
         public BaseballView(BaseballQueryBuilder queryBuilder)
         {
             this.Facets = new Dictionary<string, List<Tuple<string, int>>>();
-            this.SortTerm = queryBuilder.CurrentSortTerm;
-            this.SortDirection = queryBuilder.SortDirection;
-            ConstructView(queryBuilder);
+            _queryBuilder = queryBuilder;
         }
 
-        private void ConstructView(BaseballQueryBuilder queryBuilder)
+        public void ConstructView()
         {
-            _queryResult = queryBuilder.ExecuteQuery();
+            _queryResult = _queryBuilder.ExecuteQuery();
 
             // add facets
             foreach (var f in _queryResult.FacetFields)

@@ -89,7 +89,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\jquery-1.4.2.min.js" />
     <Content Include="Scripts\jquery.selectboxes.pack.js" />
-    <Content Include="Scripts\json2.js" />
+    <Content Include="Scripts\jquery-blockui.js" />
     <Content Include="Scripts\solrcodecamp-main.js" />
     <Content Include="Views\Home\FacetList.ascx" />
     <Content Include="Views\Home\Index.aspx" />
