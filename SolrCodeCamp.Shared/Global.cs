@@ -23,7 +23,8 @@ namespace SolrCodeCamp.Shared
                                new Tuple<string, string, int>("Year", "bg_year",5),
                                new Tuple<string, string, int>("Day/Night", "bg_dayOrNight",6),
                                new Tuple<string, string, int>("Home Plate Ump", "bg_homePlateUmpire",4),
-                               new Tuple<string, string, int>("Winner Location", "bg_winningLocation",7)
+                               new Tuple<string, string, int>("Winner Location", "bg_winningLocation",7),
+                               new Tuple<string, string, int>("Teams", "bg_teams",0)
                            };
             }
         }

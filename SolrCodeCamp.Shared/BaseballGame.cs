@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SolrNet.Attributes;
 
 namespace SolrCodeCamp.Shared
@@ -18,6 +19,9 @@ namespace SolrCodeCamp.Shared
         // 4
         [SolrField("bg_visitingTeam")]
         public string VisitingTeam { get; set; }
+
+        [SolrField("bg_teams")]
+        public List<string> TeamsInvolved { get; set; }
 
         [SolrField("bg_winningPitcher")]
         public string WinningPitcher { get; set; }
@@ -58,5 +62,10 @@ namespace SolrCodeCamp.Shared
 
         [SolrField("bg_winningLocation")]
         public WinningLocation Winner { get; set; }
+
+        public BaseballGame()
+        {
+            this.TeamsInvolved = new List<string>();
+        }
     }
 }

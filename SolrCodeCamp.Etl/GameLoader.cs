@@ -77,6 +77,9 @@ namespace SolrCodeCamp.Etl
                     if (game.WinningPitcher == String.Empty)
                         game.WinningPitcher = "Unknown";
 
+                    // losing pitcher row - row 96
+
+
                     string dayOrNight = row[12].ToString();
                     if (dayOrNight == "D")
                         game.DayOrNight = "Day";
@@ -94,6 +97,13 @@ namespace SolrCodeCamp.Etl
                     game.Winner = (game.HomeTeamScore > game.VisitingTeamScore)
                                       ? WinningLocation.Home
                                       : WinningLocation.Visitor;
+
+                    if (!string.IsNullOrEmpty(game.HomeTeam))
+                        game.TeamsInvolved.Add(game.HomeTeam);
+
+                    if (!string.IsNullOrEmpty(game.VisitingTeam))
+                        game.TeamsInvolved.Add(game.VisitingTeam);
+
                     games.Add(game);
                     idCounter++;
                 }

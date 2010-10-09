@@ -26,6 +26,8 @@ namespace SolrCodeCamp.Etl
             _solr = ServiceLocator.Current.GetInstance<ISolrOperations<BaseballGame>>();
             LoadGamesIntoIndex();
             RunExamples();
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
         }
 
         static void RunExamples()
@@ -61,7 +63,6 @@ namespace SolrCodeCamp.Etl
                     break;
                 }
             }
-            _solr.Commit();
             _solr.Optimize();
         }
     }

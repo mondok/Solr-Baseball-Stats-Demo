@@ -45,7 +45,7 @@
     that avoids logging every request
 -->
 
-<schema name="example" version="1.2">
+<schema name="baseball_statistics" version="1.2">
   <!-- attribute "name" is the name of this schema and is only used for display purposes.
        Applications should change this to reflect the nature of the search collection.
        version="1.2" is Solr's version number for the schema syntax and semantics.  It should
@@ -444,6 +444,7 @@
    <field name="bg_homePlateUmpire" type="string" indexed="true" stored="true" required="false" />
    <field name="bg_winningPitcher" type="string" indexed="true" stored="true" required="false" />
    <field name="bg_winningLocation" type="string" indexed="true" stored="true" required="false" />
+   <field name="bg_teams" type="string" indexed="true" stored="false" required="false" multiValued="true" />
 
    <!-- catchall field, containing all other searchable text fields (implemented
         via copyField further on in this schema  -->
