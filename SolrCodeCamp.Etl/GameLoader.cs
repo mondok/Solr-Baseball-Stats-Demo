@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
 using FileHelpers;
 using SolrCodeCamp.Shared;
 
@@ -74,11 +72,18 @@ namespace SolrCodeCamp.Etl
                     game.VisitingTeamScore = Int32.Parse(row[9].ToString());
 
                     game.WinningPitcher = row[94].ToString();
+
                     if (game.WinningPitcher == String.Empty)
                         game.WinningPitcher = "Unknown";
+                    else
+                        game.PitchersInvolved.Add(game.WinningPitcher);
 
                     // losing pitcher row - row 96
-
+                    game.LosingPitcher = row[96].ToString();
+                    if (game.LosingPitcher == String.Empty)
+                        game.LosingPitcher = "Unknown";
+                    else 
+                        game.PitchersInvolved.Add(game.LosingPitcher);
 
                     string dayOrNight = row[12].ToString();
                     if (dayOrNight == "D")

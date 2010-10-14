@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
 using SolrCodeCamp.BaseballWeb.Models;
@@ -19,9 +16,7 @@ namespace SolrCodeCamp.BaseballWeb.Controllers
         public HomeController()
         {
             _solrOperator = ServiceLocator.Current.GetInstance<ISolrOperations<BaseballGame>>();
-            _queryBuilder = new BaseballQueryBuilder();
-            _queryBuilder.SortDirection = "A";
-            _queryBuilder.CurrentSortTerm = "bg_homeTeam";
+            _queryBuilder = new BaseballQueryBuilder {SortDirection = "A", CurrentSortTerm = "bg_homeTeam"};
         }
 
         public ActionResult Index()

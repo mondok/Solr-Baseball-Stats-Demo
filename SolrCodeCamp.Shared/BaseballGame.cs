@@ -12,6 +12,12 @@ namespace SolrCodeCamp.Shared
         [SolrField("docType")]
         public DocType DocType { get; set; }
 
+        [SolrField("bg_teams")]
+        public List<string> TeamsInvolved { get; set; }
+
+        [SolrField("bg_pitchers")]
+        public List<string> PitchersInvolved { get; set; }
+
         // 7
         [SolrField("bg_homeTeam")]
         public string HomeTeam { get; set; }
@@ -20,11 +26,11 @@ namespace SolrCodeCamp.Shared
         [SolrField("bg_visitingTeam")]
         public string VisitingTeam { get; set; }
 
-        [SolrField("bg_teams")]
-        public List<string> TeamsInvolved { get; set; }
-
         [SolrField("bg_winningPitcher")]
         public string WinningPitcher { get; set; }
+
+        [SolrField("bg_losingPitcher")]
+        public string LosingPitcher { get; set; }
 
         // 3
         [SolrField("bg_dayOfTheWeek")]
@@ -66,6 +72,7 @@ namespace SolrCodeCamp.Shared
         public BaseballGame()
         {
             this.TeamsInvolved = new List<string>();
+            this.PitchersInvolved = new List<string>();
         }
     }
 }

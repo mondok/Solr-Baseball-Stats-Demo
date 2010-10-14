@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<SolrCodeCamp.BaseballWeb.Models.BaseballView>" %>
 <%@ Import Namespace="SolrCodeCamp.BaseballWeb.Models" %>
+<%@ Import Namespace="SolrCodeCamp.Shared" %>
 <div class="records_found">
     Showing
     <%: this.Model.GameResults.Count  %>
@@ -7,7 +8,8 @@
     <%: this.Model.TotalRecordsFound %>
     records
 </div>
-<div class="clear">&nbsp;</div>
+<div class="clear">
+    &nbsp;</div>
 <table>
     <thead>
         <tr>
@@ -38,16 +40,19 @@
             <th>
                 <%= Html.TableHeaderLink(this.Model, "bg_winningPitcher", "Winning Pitcher")%>
             </th>
+            <th>
+                <%= Html.TableHeaderLink(this.Model, "bg_losingPitcher", "Losing Pitcher")%>
+            </th>
         </tr>
     </thead>
     <tbody>
         <% foreach (var result in this.Model.GameResults)
            {%>
         <tr>
-            <td>
+            <td<% if(result.Winner == WinningLocation.Home) { %> class="winner_cell" <% } %>>
                 <%: result.HomeTeam %>
             </td>
-            <td>
+            <td<% if(result.Winner == WinningLocation.Visitor) { %>  class="winner_cell" <% } %>>
                 <%: result.VisitingTeam %>
             </td>
             <td class="number_cell">
@@ -70,6 +75,9 @@
             </td>
             <td>
                 <%: result.WinningPitcher %>
+            </td>
+                  <td>
+                <%: result.LosingPitcher %>
             </td>
         </tr>
         <%

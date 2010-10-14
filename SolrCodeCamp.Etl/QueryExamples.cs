@@ -6,8 +6,6 @@ using System.Text;
 using SolrCodeCamp.Shared;
 using SolrNet;
 using SolrNet.Commands.Parameters;
-using SolrNet.DSL;
-using SolrNet.DSL.Impl;
 
 namespace SolrCodeCamp.Etl
 {
@@ -22,6 +20,8 @@ namespace SolrCodeCamp.Etl
 
         public void RunFacetExample()
         {
+            Console.WriteLine("-- RunFacetExample --");
+
             FacetParameters facetParameters = new FacetParameters();
             QueryOptions queryOptions = new QueryOptions();
 
@@ -41,26 +41,50 @@ namespace SolrCodeCamp.Etl
 
             DateFacetingResult dateFacetResults = results.FacetDates["bg_date"];
 
-            var umpreFacetResults = results.FacetFields["bg_homePlateUmpire"];
+            var umpireFacetResults = results.FacetFields["bg_homePlateUmpire"];
+
+            Console.WriteLine("Date Facets");
+            foreach (KeyValuePair<DateTime,int> dateFacet in dateFacetResults.DateResults)
+            {
+                Console.WriteLine(string.Format("Date: {0}, Games: {1}", dateFacet.Key, dateFacet.Value));
+            }
+
+            Console.WriteLine("Umpire Facets");
+            foreach(KeyValuePair<string,int> umpireFacet in umpireFacetResults)
+            {
+                Console.WriteLine(string.Format("Umpire Name: {0}, Games Called: {1}", umpireFacet.Key, umpireFacet.Value));
+            }
+
         }
 
         public void RunTextSearchExample(string searchTerm)
         {
+            Console.WriteLine("-- RunTextSearchExample --");
+
             ISolrQueryResults<BaseballGame> results = _solrOperations.Query(new SolrQuery(searchTerm));
 
             List<BaseballGame> gameResults = results.ToList();
+
+            foreach(BaseballGame baseballGame in gameResults)
+            {
+                Console.WriteLine(string.Format("Home: {0}, Visitor: {1}, Winning Pitcher: {2}",
+                    baseballGame.HomeTeam, baseballGame.VisitingTeam, baseballGame.WinningPitcher));
+            }
         }
 
         public void RunRangeSearchExample(int startYear, int endYear)
         {
+            Console.WriteLine("-- RunRangeSearchExample --");
+
             ISolrQueryResults<BaseballGame> results =
                 _solrOperations.Query(new SolrQueryByRange<int>("bg_year", startYear, endYear));
 
             List<BaseballGame> gameResults = results.ToList();
 
-            var winningPitchers = gameResults.GroupBy(t => t.WinningPitcher).OrderByDescending(p => p.Count()).Take(10);
+            IEnumerable<IGrouping<string, BaseballGame>> winningPitchers = gameResults.GroupBy(t => t.WinningPitcher)
+                .OrderByDescending(p => p.Count()).Take(10);
 
-            foreach(var pitcher in winningPitchers)
+            foreach (IGrouping<string, BaseballGame> pitcher in winningPitchers)
             {
                 Console.WriteLine(string.Format("Pitcher: {0}, Wins: {1}", pitcher.Key, pitcher.Count()));
             }

@@ -1,3 +1,5 @@
+This code is free to use for both commercial and personal purposes, no attribution necessary.
+
 1.  Download and install Apache Tomcat
 	http://tomcat.apache.org/download-60.cgi
 

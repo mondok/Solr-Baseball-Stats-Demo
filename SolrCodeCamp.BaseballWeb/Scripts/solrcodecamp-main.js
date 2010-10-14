@@ -3,11 +3,15 @@ var currentSort = '';
 var sortDir = 'A';
 
 $(function () {
-    $('.facet_box').live('click', updatePage);
+    $('.facet_box').live('change', updatePage);
     $('#btnSearch').live('click', updatePage);
     $('.result_sort').live('click', function (e) { setSort($(this)); });
     currentSort = $('.current_sort_header').attr('id').replace('id_', '');
-
+    $('#txtSearch').keyup(function (e){
+        if (e.keyCode == 13) {
+            updatePage();
+        }
+    });
 });
 
 function setSort(arg) {
@@ -22,8 +26,6 @@ function setSort(arg) {
     else {
         sortDir = 'A';
     }
-
-
     updatePage();
 }
 

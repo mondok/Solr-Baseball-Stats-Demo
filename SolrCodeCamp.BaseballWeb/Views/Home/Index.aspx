@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
     <h2>
-        Baseball Stats Navigator</h2>
+        <a href="/" title="Home">Baseball Stats Navigator</a></h2>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <table>

@@ -26,6 +26,11 @@ body
 	text-align: right;
 }
 
+.winner_cell
+{
+    background-color:#ffff00;
+}
+
 .number_cell_foot
 {
 	text-align: right;

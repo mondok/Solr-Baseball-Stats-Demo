@@ -17,14 +17,18 @@ namespace SolrCodeCamp.Shared
             {
                 return new[]
                            {
-                               new Tuple<string, string, int>("Home Team", "bg_homeTeam",1),
+                               new Tuple<string, string, int>("Team", "bg_teams", 0), 
+                               new Tuple<string, string, int>("Home Team", "bg_homeTeam",2),
                                new Tuple<string, string, int>("Visiting Team", "bg_visitingTeam",2),
                                new Tuple<string, string, int>("Day of the Week", "bg_dayOfTheWeek",3),
                                new Tuple<string, string, int>("Year", "bg_year",5),
                                new Tuple<string, string, int>("Day/Night", "bg_dayOrNight",6),
                                new Tuple<string, string, int>("Home Plate Ump", "bg_homePlateUmpire",4),
                                new Tuple<string, string, int>("Winner Location", "bg_winningLocation",7),
-                               new Tuple<string, string, int>("Teams", "bg_teams",0)
+                               new Tuple<string, string, int>("Pitcher", "bg_pitchers",1),
+                               new Tuple<string, string, int>("Winning Pitcher", "bg_winningPitcher",3),
+                               new Tuple<string, string, int>("Losing Pitcher", "bg_losingPitcher",3)
+
                            };
             }
         }
